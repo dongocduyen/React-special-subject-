@@ -1,60 +1,25 @@
 import axios from "axios";
-import React, { Component } from "react";
+import React, { Fragment, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
-import Navbar from "./components/Navbar";
-import About from "./components/pages/About";
-import PageNotFound from "./components/pages/PageNotFound";
-import Search from "./components/users/Search";
-import Users from "./components/users/Users";
+import Navbar from "./components/layout/Navbar";
+import GithubState from "./context/github/githubState";
+import Main from "./components/layout/Main";
+import Footer from "./components/layout/Footer";
 
-export class App extends Component {
-  state = {
-    usersData: [],
-    searchText: "",
-  };
 
-  searchUsers = async (text) => {
-    const response = await axios.get(
-      `https://api.github.com/search/users?q=${text}`
-    );
-    this.setState({
-      usersData: response.data.items,
-    });
-  };
-
-  clearUsers = () => {
-    this.setState({
-      usersData: [],
-    });
-  };
-
-  render() {
-    return (
+const App = () => {
+  return (
+    <GithubState>
       <Router>
         <div>
           <Navbar />
-          <div className="container">
-            <Switch>
-              <Route exact path="/" component={Search}>
-                <Search
-                  clearUsers={this.clearUsers}
-                  searchUsers={this.searchUsers}
-                />
-                <Users usersData={this.state.usersData} />
-              </Route>
-            </Switch>
-            <Route exact path="/About">
-              <About />
-            </Route>
-            <Route path="*">
-              <PageNotFound />
-            </Route>
-          </div>
+          <Main />
+          {/* <Footer /> */}
         </div>
       </Router>
-    );
-  }
-}
+    </GithubState>
+  );
+};
 
 export default App;
